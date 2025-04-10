@@ -4,15 +4,17 @@ import infoButton from '../image/infoButton.svg';
 import edit from '../image/edit.svg';
 import deleteIcon from '../image/delete.svg';
 import completed from '../image/completed.svg';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useTaskContext } from '../context/TaskContext';
 
-const TaskCard = ({ title, startDate, endDate, onEdit, onDelete }) => {
+const TaskCard = ({ title, startDate, endDate, priority, id, onEdit, onDelete }) => {
     return (
         <div className={style.taskCard}>
             <div className={style.taskContent}>
                 <h2>{title}</h2>
                 <p>Start date: {startDate}</p>
                 <p>End date: {endDate}</p>
+                <p>Priority: {priority}</p>
                 <p className={style.completedStatus}>
                     <img src={completed} alt="check" />Completed
                 </p>
@@ -34,71 +36,40 @@ const TaskCard = ({ title, startDate, endDate, onEdit, onDelete }) => {
 
 const CompletedTask = () => {
     const navigate = useNavigate();
-    const [tasks, setTasks] = useState([
-        {
-            id: 1,
-            title: 'Create Wireframes',
-            startDate: '01-07-2023',
-            endDate: '05-07-2023',
-            priority: 'High'
-        },
-        {
-            id: 2,
-            title: 'Set up Development Environment',
-            startDate: '02-07-2023',
-            endDate: '03-07-2023',
-            priority: 'High'
-        },
-        {
-            id: 3,
-            title: 'Research Best Practices',
-            startDate: '03-07-2023',
-            endDate: '08-07-2023',
-            priority: 'Medium'
-        },
-        {
-            id: 4,
-            title: 'Create Project Structure',
-            startDate: '05-07-2023',
-            endDate: '06-07-2023',
-            priority: 'Medium'
-        },
-        {
-            id: 5,
-            title: 'Setup Git Repository',
-            startDate: '01-07-2023',
-            endDate: '01-07-2023',
-            priority: 'Low'
-        },
-        {
-            id: 6,
-            title: 'Create Color Palette',
-            startDate: '02-07-2023',
-            endDate: '04-07-2023',
-            priority: 'Low'
-        },
-        {
-            id: 7,
-            title: 'Team Meeting',
-            startDate: '06-07-2023',
-            endDate: '06-07-2023',
-            priority: 'High'
-        },
-        {
-            id: 8,
-            title: 'Client Presentation',
-            startDate: '07-07-2023',
-            endDate: '07-07-2023',
-            priority: 'High'
-        }
-    ]);
-
-    const handleEdit = (id) => {
-        navigate(`/edit-task/${id}`);
+    const location = useLocation();
+    const { completedTasks, deleteTask } = useTaskContext();
+    const [timeFilter, setTimeFilter] = useState('All Tasks');
+    
+    // Функция для фильтрации задач по времени
+    const getFilteredTasks = () => {
+        if (timeFilter === 'All Tasks') return completedTasks;
+        
+        const today = new Date();
+        const oneDay = 24 * 60 * 60 * 1000; // миллисекунды в дне
+        
+        return completedTasks.filter(task => {
+            const taskDate = new Date(task.endDate.split('-').reverse().join('-'));
+            
+            switch(timeFilter) {
+                case 'Today':
+                    return taskDate.toDateString() === today.toDateString();
+                case 'This Week':
+                    const diffDays = Math.round(Math.abs((today - taskDate) / oneDay));
+                    return diffDays <= 7;
+                case 'This Month':
+                    return taskDate.getMonth() === today.getMonth() && 
+                           taskDate.getFullYear() === today.getFullYear();
+                default:
+                    return true;
+            }
+        });
     };
 
-    const handleDelete = (id) => {
-        setTasks(tasks.filter(task => task.id !== id));
+    const filteredTasks = getFilteredTasks();
+
+    // Функция для открытия модального окна редактирования
+    const handleOpenEditModal = (id) => {
+        navigate(`/edit-task/${id}`, { state: { background: location } });
     };
 
     return (
@@ -106,19 +77,27 @@ const CompletedTask = () => {
             <div className={style.header}>
                 <h1>Completed Tasks</h1>
             </div>
+            <div className={style.inputWrapper}>
+            </div>
             <div className={style.taskGrid}>
-                {tasks.map(task => (
+                {filteredTasks.map(task => (
                     <TaskCard
                         key={task.id}
+                        id={task.id}
                         title={task.title}
                         startDate={task.startDate}
                         endDate={task.endDate}
-                        onEdit={() => handleEdit(task.id)}
-                        onDelete={() => handleDelete(task.id)}
+                        priority={task.priority}
+                        onEdit={() => handleOpenEditModal(task.id)}
+                        onDelete={() => deleteTask(task.id)}
                     />
                 ))}
             </div>
-            <button className={style.loadMoreButton}>Load more</button>
+            {filteredTasks.length === 0 && (
+                <div className={style.noTasks}>
+                    <p>No completed tasks found for the selected period</p>
+                </div>
+            )}
         </div>
     );
 };

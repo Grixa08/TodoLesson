@@ -4,14 +4,16 @@ import infoButton from '../image/infoButton.svg';
 import edit from '../image/edit.svg';
 import deleteIcon from '../image/delete.svg';
 import check from '../image/check.svg';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useTaskContext } from '../context/TaskContext';
 
-const TaskCard = ({ title, startDate, onEdit, onDelete, onMarkCompleted }) => {
+const TaskCard = ({ title, startDate, priority, id, onEdit, onDelete, onMarkCompleted }) => {
     return (
         <div className={style.taskCard}>
             <div className={style.taskContent}>
                 <h2>{title}</h2>
                 <p>Start date: {startDate}</p>
+                <p>Priority: {priority}</p>
                 <p className={style.completeTask} onClick={onMarkCompleted}>
                     <img src={check} alt="check" />Mark as completed
                 </p>
@@ -33,68 +35,16 @@ const TaskCard = ({ title, startDate, onEdit, onDelete, onMarkCompleted }) => {
 
 const RunningTask = () => {
     const navigate = useNavigate();
-    const [tasks, setTasks] = useState([
-        {
-            id: 1,
-            title: 'Learn JavaScript',
-            startDate: '07-07-2023',
-            priority: 'High'
-        },
-        {
-            id: 2,
-            title: 'Build a React App',
-            startDate: '10-07-2023',
-            priority: 'Medium'
-        },
-        {
-            id: 3,
-            title: 'Learn Node.js',
-            startDate: '12-07-2023',
-            priority: 'High'
-        },
-        {
-            id: 4,
-            title: 'Set up GitHub Projects',
-            startDate: '15-07-2023',
-            priority: 'Low'
-        },
-        {
-            id: 5,
-            title: 'Prepare portfolio',
-            startDate: '18-07-2023',
-            priority: 'High'
-        },
-        {
-            id: 6,
-            title: 'Learn UI/UX basics',
-            startDate: '20-07-2023',
-            priority: 'Medium'
-        },
-        {
-            id: 7,
-            title: 'Write documentation',
-            startDate: '22-07-2023',
-            priority: 'Medium'
-        },
-        {
-            id: 8,
-            title: 'Research testing frameworks',
-            startDate: '25-07-2023',
-            priority: 'Low'
-        }
-    ]);
+    const location = useLocation();
+    const { runningTasks, deleteTask, markAsCompleted } = useTaskContext();
+    const [filter, setFilter] = useState('All Tasks');
+    
+    const filteredTasks = filter === 'All Tasks' 
+        ? runningTasks 
+        : runningTasks.filter(task => task.priority === filter.split(' ')[0]);
 
-    const handleEdit = (id) => {
-        navigate(`/edit-task/${id}`);
-    };
-
-    const handleDelete = (id) => {
-        setTasks(tasks.filter(task => task.id !== id));
-    };
-
-    const handleMarkCompleted = (id) => {
-        // Логика отметки задачи как выполненной
-        console.log(`Task ${id} marked as completed`);
+    const handleOpenEditModal = (id) => {
+        navigate(`/edit-task/${id}`, { state: { background: location } });
     };
 
     return (
@@ -103,26 +53,32 @@ const RunningTask = () => {
                 <h1>Running Tasks</h1>
             </div>
             <div className={style.inputWrapper}>
-                <select id="priority">
+                <select id="priority" value={filter} onChange={(e) => setFilter(e.target.value)}>
                     <option>All Tasks</option>
-                    <option>High Priority</option>
-                    <option>Medium Priority</option>
-                    <option>Low Priority</option>
+                    <option>High Category</option>
+                    <option>Medium Category</option>
+                    <option>Low Category</option>
                 </select>
             </div>
             <div className={style.taskGrid}>
-                {tasks.map(task => (
+                {filteredTasks.map(task => (
                     <TaskCard
                         key={task.id}
+                        id={task.id}
                         title={task.title}
                         startDate={task.startDate}
-                        onEdit={() => handleEdit(task.id)}
-                        onDelete={() => handleDelete(task.id)}
-                        onMarkCompleted={() => handleMarkCompleted(task.id)}
+                        priority={task.priority}
+                        onEdit={() => handleOpenEditModal(task.id)}
+                        onDelete={() => deleteTask(task.id)}
+                        onMarkCompleted={() => markAsCompleted(task.id)}
                     />
                 ))}
             </div>
-            <button className={style.loadMoreButton}>Load more</button>
+            {filteredTasks.length === 0 && (
+                <div className={style.noTasks}>
+                    <p>No tasks found</p>
+                </div>
+            )}
         </div>
     );
 };

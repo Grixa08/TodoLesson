@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import style from '../styles/HomePage.module.scss';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import edit from '../image/edit.svg';
 import check from '../image/check.svg';
 import deleteIcon from '../image/delete.svg';
 import infoButton from '../image/infoButton.svg';
 import add from '../image/add.svg';
 import completed from '../image/completed.svg';
+import { useTaskContext } from '../context/TaskContext';
 
-const TaskCard = ({ title, startDate, endDate, isCompleted, onEditClick }) => {
+const TaskCard = ({ title, startDate, endDate, isCompleted, id, onEditClick, onMarkCompleted, onDelete }) => {
     return (
         <div className={style.taskCard}>
             <div className={style.taskHeader}>
@@ -23,9 +24,9 @@ const TaskCard = ({ title, startDate, endDate, isCompleted, onEditClick }) => {
                     </div>
                     {!isCompleted && (
                         <div className={style.dateRow}>
-                            <button className={style.actionButton}><img src={check} alt="check" /></button>
+                            <button className={style.actionButton} onClick={onMarkCompleted}><img src={check} alt="check" /></button>
                             <p className={style.markAsCompleted}>Mark as completed</p>
-                            <button className={style.actionButton}><img src={deleteIcon} alt="delete" /></button>
+                            <button className={style.actionButton} onClick={onDelete}><img src={deleteIcon} alt="delete" /></button>
                         </div>
                     )}
                     {isCompleted && (
@@ -33,7 +34,7 @@ const TaskCard = ({ title, startDate, endDate, isCompleted, onEditClick }) => {
                             <p>End date: {endDate}</p>
                             <div className={style.dateRow}>
                                 <p className={style.completed}><img src={completed} alt="completed" /> completed</p>
-                                <button className={style.actionButton}><img src={deleteIcon} alt="delete" /></button>
+                                <button className={style.actionButton} onClick={onDelete}><img src={deleteIcon} alt="delete" /></button>
                             </div>
                         </>
                     )}
@@ -45,25 +46,13 @@ const TaskCard = ({ title, startDate, endDate, isCompleted, onEditClick }) => {
 
 const HomePage = () => {
     const navigate = useNavigate();
-    const [tasks] = useState([
-        {
-            id: 1,
-            title: 'Learn JavaScript',
-            startDate: '07-07-2023',
-            endDate: '07-07-2023',
-            completed: false
-        },
-        {
-            id: 2,
-            title: 'Learn JavaScript',
-            startDate: '07-07-2023',
-            endDate: '07-07-2023',
-            completed: true
-        }
-    ]);
+    const location = useLocation();
+    const { runningTasks, completedTasks, markAsCompleted, deleteTask } = useTaskContext();
 
-    const runningTasks = tasks.filter(task => !task.completed);
-    const completedTasks = tasks.filter(task => task.completed);
+    // Функция для открытия EditTask в модальном окне
+    const handleOpenEditModal = (id) => {
+        navigate(`/edit-task/${id}`, { state: { background: location } });
+    };
 
     return (
         <div className={style.container}>
@@ -73,17 +62,20 @@ const HomePage = () => {
                     <div className={style.underline}></div>
                 </div>
                 <div className={style.tasksList}>
-                    {runningTasks.map(task => (
+                    {runningTasks.slice(0, 3).map(task => (
                         <TaskCard
                             key={task.id}
+                            id={task.id}
                             title={task.title}
                             startDate={task.startDate}
                             isCompleted={false}
-                            onEditClick={() => navigate(`/edit/${task.id}`)}
+                            onEditClick={() => handleOpenEditModal(task.id)}
+                            onMarkCompleted={() => markAsCompleted(task.id)}
+                            onDelete={() => deleteTask(task.id)}
                         />
                     ))}
                 </div>
-                <button className={style.viewAllButton}>All running Tasks →</button>
+                <button className={style.viewAllButton} onClick={() => navigate('/running-task')}>All running Tasks →</button>
             </div>
 
             <div className={style.divider}></div>
@@ -94,18 +86,20 @@ const HomePage = () => {
                     <div className={style.underline}></div>
                 </div>
                 <div className={style.tasksList}>
-                    {completedTasks.map(task => (
+                    {completedTasks.slice(0, 3).map(task => (
                         <TaskCard
                             key={task.id}
+                            id={task.id}
                             title={task.title}
                             startDate={task.startDate}
                             endDate={task.endDate}
                             isCompleted={true}
-                            onEditClick={() => navigate(`/edit/${task.id}`)}
+                            onEditClick={() => handleOpenEditModal(task.id)}
+                            onDelete={() => deleteTask(task.id)}
                         />
                     ))}
                 </div>
-                <button className={style.viewAllButton}>All Completed Tasks →</button>
+                <button className={style.viewAllButton} onClick={() => navigate('/completed-tasks')}>All Completed Tasks →</button>
             </div>
 
             <button 
