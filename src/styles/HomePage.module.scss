@@ -1,0 +1,171 @@
+.container {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+    width: 100%;
+    background-color: #FFDDD2;
+    min-height: calc(100vh - 10vh);
+    position: relative;
+}
+
+.tasksSection {
+    flex: 1;
+    
+    h2 {
+        color: #006D77;
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+}
+
+.sectionHeader {
+    margin-bottom: 20px;
+    
+    .underline {
+        height: 2px;
+        background-color: #006D77;
+        width: 100%;
+    }
+}
+
+.tasksList {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.taskCard {
+    background-color: #006D77;
+    border-radius: 8px;
+    padding: 15px;
+    color: white;
+}
+
+.taskHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+
+    h3 {
+        margin: 0;
+        font-size: 18px;
+    }
+}
+
+.taskInfo {
+    display: flex;
+    justify-content: space-between;
+}
+
+.taskDetails {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.dateRow {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    
+    p {
+        margin: 0;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .actionButton {
+        &:last-of-type {
+            margin-left: auto;
+        }
+    }
+}
+
+.completed {
+    color: #83C5BE;
+}
+
+.markAsCompleted {
+    opacity: 0.8;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.addTaskButton {
+    position: fixed;
+    right: 40px;
+    bottom: 40px;
+    border: none;
+    background: none;
+
+    img {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+.actionButton {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &:hover {
+        opacity: 0.8;
+    }
+
+    img {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.infoButton {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        opacity: 0.8;
+    }
+
+    img {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.viewAllButton {
+    background: none;
+    border: 1px solid #006D77;
+    color: #006D77;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+
+    &:hover {
+        background-color: #006D77;
+        color: white;
+    }
+}
+
+.divider {
+    width: 1px;
+    background-color: #006D77;
+    opacity: 0.3;
+} 

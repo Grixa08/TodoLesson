@@ -1,0 +1,116 @@
+.container {
+    background-color: #FFDDD2;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-height: calc(100vh - 10vh);
+    overflow: auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    background-color: #83C5BE;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 800px;
+    
+    h1 {
+        color: white;
+        margin: 0;
+        font-size: 24px;
+    }
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    width: 80%;
+    max-width: 800px;
+}
+
+.taskGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    width: 80%;
+    max-width: 800px;
+}
+
+.taskCard {
+    background-color: #006D77;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    position: relative;
+    transition: transform 0.2s;
+    display: flex;
+    justify-content: space-between;
+}
+
+.taskContent {
+    flex: 1;
+    padding-right: 20px;
+
+    h2 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 20px;
+    }
+
+    p {
+        margin-bottom: 15px;
+        font-size: 14px;
+        opacity: 0.9;
+    }
+}
+
+.completedStatus {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    margin-top: 10px;
+    color: #83C5BE;
+    
+    img {
+        margin-right: 10px;
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+    }
+}
+
+.icons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.infoIcon, .editIcon, .deleteIcon {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.loadMoreButton {
+    display: block;
+    margin: 30px auto;
+    padding: 10px 20px;
+    background-color: #006D77;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}

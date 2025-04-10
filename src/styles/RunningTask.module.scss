@@ -1,0 +1,150 @@
+.container {
+    background-color: #FFDDD2;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-height: calc(100vh - 10vh);
+    overflow: auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    background-color: #83C5BE;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 800px;
+    
+    h1 {
+        color: white;
+        margin: 0;
+        font-size: 24px;
+    }
+}
+
+.inputWrapper {
+    margin-bottom: 30px;
+    width: 80%;
+    max-width: 800px;
+    
+    select {
+        width: 30%;
+        padding: 10px;
+        font-size: 16px;
+        background-color: #006D77;
+        color: white;
+        margin-bottom: 20px;
+    }
+
+    option {
+        background-color: white;
+        color: black;
+    }
+}
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    width: 80%;
+    max-width: 800px;
+}
+
+.sortButton, .searchInput {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+.taskGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    width: 80%;
+    max-width: 800px;
+}
+
+.taskCard {
+    background-color: #006D77;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    position: relative;
+    transition: transform 0.2s;
+    display: flex;
+    justify-content: space-between;
+}
+
+.taskContent {
+    flex: 1;
+    padding-right: 20px;
+
+    h2 {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 20px;
+    }
+
+    p {
+        margin-bottom: 15px;
+        font-size: 14px;
+        opacity: 0.9;
+    }
+}
+
+.completeTask {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 500;
+    margin-top: 10px;
+    
+    img {
+        margin-right: 10px;
+        width: 20px;
+        height: 20px;
+        vertical-align: middle;
+    }
+}
+
+.completeButton {
+    background-color: transparent;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.icons {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.infoIcon, .editIcon, .deleteIcon {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: none;
+    border: none;
+}
+
+.loadMoreButton {
+    display: block;
+    margin: 30px auto;
+    padding: 10px 20px;
+    background-color: #006D77;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+
+}
